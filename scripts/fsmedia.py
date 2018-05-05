@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 
 import cv2
+from moviepy.editor import VideoFileClip
 import numpy as np
 
 from lib.detect_blur import is_blurry
@@ -130,6 +131,28 @@ class Images(object):
             exit(1)
 
         print("Input Directory: {}".format(self.args.input_dir))
+
+        if hasattr(self.args, 'video_file') and self.video_file:
+            #TBA: check if self.video_
+            if not os.path.isfile(self.video_file):
+                print("Video file {} not found.".format(self.args.video_file))
+                exit(1)
+            video_name = os.path.basename(self.args.video_file)
+            clip = VideoFileClip(self.args.video_file)
+            clip.audio.write_audiofile(os.path.join(self.args.input_dir,
+                                                    "{}.mp3".format(video_name), progress_bar=False, verbose=False)
+            capturer = cv2.VideoCapture(self.args.video_file)
+            frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+            fps = int(vidcap.get(cv2.CAP_PROP_FPS))
+            w = int(vidcap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            h = int(vidcap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+            for i in range(frames):
+                succ, img = capturer.read()
+                if not succ:
+                    break
+                new_image = '{}.{}.{}.{}.{}.jpg'.format(video_name, fps, w, h, i)
+                cv2.imwrite(os.path.join(self.args.input_dir, new_image), image)
 
         if hasattr(self.args, 'skip_existing') and self.args.skip_existing:
             input_images = get_image_paths(self.args.input_dir, self.already_processed)

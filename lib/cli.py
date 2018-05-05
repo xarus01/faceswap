@@ -204,6 +204,12 @@ class ExtractArgs(ExtractConvertArgs):
                               "dest": "skip_existing",
                               "default": False,
                               "help": "Skips frames that have already been extracted"})
+                                      " process on a GPU will run out of memory and will crash"})
+        argument_list.append({"opts": ("-vd", "--video-input"),
+                              "action": "store_true",
+                              "dest": "video_input",
+                              "default": False,
+                              "help": "Get video input and convert it to frames and audio"})
         argument_list.append({"opts": ("-dl", "--debug-landmarks"),
                               "action": "store_true",
                               "dest": "debug_landmarks",
